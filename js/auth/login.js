@@ -56,12 +56,20 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = await res.json();
 
       if (data.success) {
+        // Gán thông tin người dùng và phân quyền
         const userInfo = {
-          ...data.user,
+          id: data.user.ID_TaiKhoan,
+          hoTen: data.user.HoTen,
+          email: data.user.Email,
+          soDienThoai: data.user.SoDienThoai,
+          diaChi: data.user.DiaChi,
+          ID_ChucVu: data.user.ID_ChucVu,
           role: data.user.ID_ChucVu === 1 ? 'admin' : 'user'
         };
+
+        // Lưu vào localStorage
         localStorage.setItem('loggedInUser', JSON.stringify(userInfo));
-        
+
         openModal('Thành công', 'Đăng nhập thành công!', () => {
           if (userInfo.role === 'admin') {
             window.location.href = '../admin/project.html';

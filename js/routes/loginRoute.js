@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
+const db = require('../db'); // Đường dẫn kết nối MySQL
 
-
+// Đăng nhập
 router.post('/login', (req, res) => {
   const { email, password } = req.body;
 
@@ -30,6 +30,7 @@ router.post('/login', (req, res) => {
   });
 });
 
+// Đăng ký
 router.post('/register', (req, res) => {
   const { hoTen, gmail, dienThoai, matKhau, chucVu } = req.body;
 
@@ -87,7 +88,20 @@ router.post('/register', (req, res) => {
   });
 });
 
+//  danh sách thú cưng theo ID_TaiKhoan
+router.get('/pets/:userId', async (req, res) => {
+  const userId = req.params.userId;
 
-
+  try {
+    const [rows] = await db.query(
+      'SELECT * FROM ThuCung WHERE ID_TaiKhoan = ?',
+      [userId]
+    );
+    res.json({ success: true, pets: rows });
+  } catch (err) {
+    console.error('Lỗi khi lấy thú cưng:', err);
+    res.status(500).json({ success: false, message: 'Lỗi máy chủ' });
+  }
+});
 
 module.exports = router;
